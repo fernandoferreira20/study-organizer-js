@@ -32,6 +32,21 @@ body {
   text-align: center;
 }
 
+.app-header-branding {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.app-header-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
 .app-header h1 {
   font-size: 2.4rem;
   color: #3f2619;
@@ -416,6 +431,15 @@ button:hover {
 ========================== */
 
 @media (max-width: 768px) {
+  .app-header-branding {
+    gap: 10px;
+  }
+
+  .app-header-logo {
+    width: 40px;
+    height: 40px;
+  }
+
   .app-container {
     grid-template-columns: 1fr;
   }
