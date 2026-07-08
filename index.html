@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Organizer JS</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>📚 Study Organizer JS</h1>
+    <p>Organize your tasks, subjects, deadlines and study progress.</p>
+  </header>
+
+  <main class="app-container">
+    <section class="form-section">
+      <h2>New Task</h2>
+
+      <form id="task-form">
+        <label>
+          Task Name
+          <input type="text" id="task-name" placeholder="Example: Study Linear Algebra" required />
+        </label>
+
+        <label>
+          Subject
+          <select id="task-subject" required>
+            <option value="">Select a subject</option>
+            <option value="Linear Algebra">Linear Algebra</option>
+            <option value="Operating Systems">Operating Systems</option>
+            <option value="Database Systems">Database Systems</option>
+            <option value="Programming">Programming</option>
+            <option value="English">English</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label>
+          Priority
+          <select id="task-priority" required>
+            <option value="Low">Low</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="High">High</option>
+          </select>
+        </label>
+
+        <label>
+          Deadline
+          <input type="date" id="task-deadline" required />
+        </label>
+
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Dashboard</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span>Total Tasks</span>
+          <strong id="total-tasks">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Completed</span>
+          <strong id="completed-tasks">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Pending</span>
+          <strong id="pending-tasks">0</strong>
+        </div>
+      </div>
+
+      <div class="progress-box">
+        <div class="progress-info">
+          <span>Progress</span>
+          <strong id="progress-percentage">0%</strong>
+        </div>
+
+        <div class="progress-bar">
+          <div id="progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="filters-section">
+      <h2>Filters</h2>
+
+      <div class="filter-buttons">
+        <button type="button" class="filter-btn active" data-filter="all">All</button>
+        <button type="button" class="filter-btn" data-filter="pending">Pending</button>
+        <button type="button" class="filter-btn" data-filter="completed">Completed</button>
+        <button type="button" class="filter-btn" data-filter="high">High Priority</button>
+      </div>
+    </section>
+
+    <section class="tasks-section">
+      <h2>Task List</h2>
+
+      <div id="tasks-container">
+        <p class="empty-message">No tasks yet. Add your first study task.</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/script.js"></script>
+</body>
+</html>
