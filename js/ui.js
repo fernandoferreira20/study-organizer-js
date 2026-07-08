@@ -123,12 +123,19 @@ export function createTaskCard(task) {
   completeButton.textContent = task.completed ? "Mark Incomplete" : "Complete";
   completeButton.dataset.action = "toggle-complete";
 
+  const editButton = document.createElement("button");
+  editButton.type = "button";
+  editButton.textContent = "Edit";
+  editButton.className = "edit-task-btn";
+  editButton.dataset.action = "edit";
+
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
   deleteButton.textContent = "Delete";
   deleteButton.dataset.action = "delete";
 
   actions.appendChild(completeButton);
+  actions.appendChild(editButton);
   actions.appendChild(deleteButton);
 
   card.appendChild(title);

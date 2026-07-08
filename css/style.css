@@ -132,6 +132,28 @@ button:hover {
   box-shadow: 0 10px 20px rgba(63, 38, 25, 0.2);
 }
 
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cancel-edit-btn {
+  background: #8a6a4f;
+}
+
+.cancel-edit-btn:hover {
+  background: #6f533b;
+}
+
+.edit-task-btn {
+  background: #7b4b2a;
+}
+
+.edit-task-btn:hover {
+  background: #5f371d;
+}
+
 /* ==========================
    DASHBOARD
 ========================== */
@@ -261,6 +283,27 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.task-card {
+  background: #fffaf5;
+  border: 1px solid #ead6c0;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.task-actions button {
+  padding: 10px 14px;
 }
 
 .empty-message {

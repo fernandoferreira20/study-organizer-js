@@ -3,7 +3,7 @@
 // ======================================
 
 import { loadTasks, saveTasks } from "./storage.js";
-import { createTask, deleteTask, toggleTaskCompletion } from "./tasks.js";
+import { createTask, deleteTask, toggleTaskCompletion, updateTask } from "./tasks.js";
 import { renderTasks, updateDashboard, setActiveFilter } from "./ui.js";
 
 // ======================================
@@ -14,6 +14,7 @@ let tasks = [];
 let currentFilter = "all";
 let searchQuery = "";
 let currentSort = "newest";
+let editingTaskId = null;
 
 // ======================================
 // HELPER FUNCTIONS
@@ -144,11 +145,85 @@ function refreshApplication() {
 }
 
 /**
- * Handle the form submission for creating a new task.
+ * Reset the task form and return it to create mode.
  *
- * The form is the place where the user enters task details. When it is
- * submitted, we collect the values, create a task object, update the app state,
- * and then refresh the UI.
+ * The same form is reused for both creating and updating tasks. Resetting it
+ * keeps the UI simple and ensures the user can switch between the two actions.
+ */
+function resetTaskForm() {
+  const taskForm = document.querySelector("#task-form");
+
+  if (taskForm) {
+    taskForm.reset();
+  }
+
+  editingTaskId = null;
+  setFormMode(false);
+}
+
+/**
+ * Change the form into edit mode for a specific task.
+ *
+ * Editing state is stored separately from the task list so the app knows which
+ * task should be updated. Using the task ID is safer than using an array index,
+ * because the task may be filtered, searched, or sorted in the visible list.
+ *
+ * @param {string} taskId The id of the task that should be edited.
+ */
+function startEditingTask(taskId) {
+  const taskToEdit = tasks.find((task) => task.id === taskId);
+
+  if (!taskToEdit) {
+    return;
+  }
+
+  const taskForm = document.querySelector("#task-form");
+
+  if (!taskForm) {
+    return;
+  }
+
+  editingTaskId = taskId;
+  taskForm.title.value = taskToEdit.title;
+  taskForm.subject.value = taskToEdit.subject;
+  taskForm.priority.value = taskToEdit.priority;
+  taskForm.deadline.value = taskToEdit.deadline;
+
+  setFormMode(true);
+  taskForm.title.focus();
+}
+
+/**
+ * Leave edit mode and return the form to its default state.
+ */
+function cancelEditingTask() {
+  resetTaskForm();
+}
+
+/**
+ * Update the form button text and cancel button visibility.
+ *
+ * @param {boolean} isEditing Whether the form is currently in edit mode.
+ */
+function setFormMode(isEditing) {
+  const submitButton = document.querySelector("#task-submit-btn");
+  const cancelButton = document.querySelector("#cancel-edit-btn");
+
+  if (submitButton) {
+    submitButton.textContent = isEditing ? "Update Task" : "Add Task";
+  }
+
+  if (cancelButton) {
+    cancelButton.hidden = !isEditing;
+  }
+}
+
+/**
+ * Handle the form submission for creating or updating a task.
+ *
+ * The same form is reused for both actions. If an edit is in progress, the app
+ * updates the existing task instead of creating a new one. The old completed
+ * and createdAt values are preserved while the editable fields are changed.
  *
  * @param {Event} event The submit event from the form.
  */
@@ -165,12 +240,28 @@ function handleFormSubmit(event) {
     return;
   }
 
-  const newTask = createTask(title, subject, priority, deadline);
-  tasks = [...tasks, newTask];
+  if (editingTaskId) {
+    const taskToUpdate = tasks.find((task) => task.id === editingTaskId);
+
+    if (taskToUpdate) {
+      const updatedTask = {
+        ...taskToUpdate,
+        title,
+        subject,
+        priority,
+        deadline,
+      };
+
+      tasks = updateTask(tasks, updatedTask);
+    }
+  } else {
+    const newTask = createTask(title, subject, priority, deadline);
+    tasks = [...tasks, newTask];
+  }
 
   saveTasks(tasks);
   refreshApplication();
-  form.reset();
+  resetTaskForm();
 }
 
 /**
@@ -196,6 +287,11 @@ function handleTaskContainerClick(event) {
   }
 
   const taskId = taskCard.dataset.taskId;
+
+  if (button.dataset.action === "edit") {
+    startEditingTask(taskId);
+    return;
+  }
 
   if (button.dataset.action === "toggle-complete") {
     tasks = toggleTaskCompletion(tasks, taskId);
@@ -279,6 +375,7 @@ function initializeApp() {
   const filterContainer = document.querySelector(".filter-buttons");
   const searchInput = document.querySelector("#task-search");
   const sortSelect = document.querySelector("#task-sort");
+  const cancelEditButton = document.querySelector("#cancel-edit-btn");
 
   if (taskForm) {
     taskForm.addEventListener("submit", handleFormSubmit);
@@ -298,6 +395,10 @@ function initializeApp() {
 
   if (sortSelect) {
     sortSelect.addEventListener("change", handleSortChange);
+  }
+
+  if (cancelEditButton) {
+    cancelEditButton.addEventListener("click", cancelEditingTask);
   }
 }
 
