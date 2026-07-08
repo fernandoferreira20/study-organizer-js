@@ -4,17 +4,43 @@
 
 import { loadTasks, saveTasks } from "./storage.js";
 import { createTask, deleteTask, toggleTaskCompletion } from "./tasks.js";
-import { renderTasks, updateDashboard } from "./ui.js";
+import { renderTasks, updateDashboard, setActiveFilter } from "./ui.js";
 
 // ======================================
 // APPLICATION STATE
 // ======================================
 
 let tasks = [];
+let currentFilter = "all";
 
 // ======================================
 // HELPER FUNCTIONS
 // ======================================
+
+/**
+ * Return the tasks that should be visible for the current filter.
+ *
+ * The filter() method creates a new array instead of changing the original one.
+ * That is important because the main tasks array should remain the complete
+ * source of truth. The UI can display a filtered view without losing any data.
+ *
+ * @returns {Array} The tasks that match the selected filter.
+ */
+function getFilteredTasks() {
+  if (currentFilter === "pending") {
+    return tasks.filter((task) => task.completed === false);
+  }
+
+  if (currentFilter === "completed") {
+    return tasks.filter((task) => task.completed === true);
+  }
+
+  if (currentFilter === "high") {
+    return tasks.filter((task) => task.priority === "High");
+  }
+
+  return tasks;
+}
 
 /**
  * Refresh the visible UI from the current application state.
@@ -24,7 +50,7 @@ let tasks = [];
  * we can call this function whenever the task list changes.
  */
 function refreshApplication() {
-  renderTasks(tasks);
+  renderTasks(getFilteredTasks());
   updateDashboard(tasks);
 }
 
@@ -39,11 +65,6 @@ function refreshApplication() {
  */
 function handleFormSubmit(event) {
   event.preventDefault();
-
-    console.log(document.getElementById("task-name"));
-    console.log(document.getElementById("task-subject"));
-    console.log(document.getElementById("task-priority"));
-    console.log(document.getElementById("task-deadline"));
 
   const form = event.target;
   const title = form.title.value.trim();
@@ -99,6 +120,27 @@ function handleTaskContainerClick(event) {
   refreshApplication();
 }
 
+/**
+ * Handle clicks on the filter buttons.
+ *
+ * Application state is the current view the user is looking at. In this app,
+ * the active filter is part of that state. Updating it here keeps the logic
+ * centralized and makes the UI easy to understand.
+ *
+ * @param {Event} event The click event from the filter buttons container.
+ */
+function handleFilterClick(event) {
+  const filterButton = event.target.closest("button[data-filter]");
+
+  if (!filterButton) {
+    return;
+  }
+
+  currentFilter = filterButton.dataset.filter || "all";
+  setActiveFilter(currentFilter);
+  refreshApplication();
+}
+
 // ======================================
 // APP INITIALIZATION
 // ======================================
@@ -114,10 +156,12 @@ function initializeApp() {
   const savedTasks = loadTasks();
   tasks = savedTasks;
 
+  setActiveFilter(currentFilter);
   refreshApplication();
 
   const taskForm = document.querySelector("#task-form");
   const taskContainer = document.querySelector("#tasks-container");
+  const filterContainer = document.querySelector(".filter-buttons");
 
   if (taskForm) {
     taskForm.addEventListener("submit", handleFormSubmit);
@@ -125,6 +169,10 @@ function initializeApp() {
 
   if (taskContainer) {
     taskContainer.addEventListener("click", handleTaskContainerClick);
+  }
+
+  if (filterContainer) {
+    filterContainer.addEventListener("click", handleFilterClick);
   }
 }
 

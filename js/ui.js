@@ -73,6 +73,24 @@ export function clearTaskContainer() {
 }
 
 /**
+ * Activate the correct filter button in the UI.
+ *
+ * This keeps the visible button state in sync with the current application
+ * state. The script module decides which filter is active, and the UI module
+ * handles the DOM update that makes the selected button look active.
+ *
+ * @param {string} filterName The filter that should be highlighted.
+ */
+export function setActiveFilter(filterName) {
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  filterButtons.forEach((button) => {
+    const isActive = button.dataset.filter === filterName;
+    button.classList.toggle("active", isActive);
+  });
+}
+
+/**
  * Create a single task card element.
  *
  * createElement() and appendChild() are used to build the card step by step.
