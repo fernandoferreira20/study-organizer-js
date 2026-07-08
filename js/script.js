@@ -40,6 +40,11 @@ function refreshApplication() {
 function handleFormSubmit(event) {
   event.preventDefault();
 
+    console.log(document.getElementById("task-name"));
+    console.log(document.getElementById("task-subject"));
+    console.log(document.getElementById("task-priority"));
+    console.log(document.getElementById("task-deadline"));
+
   const form = event.target;
   const title = form.title.value.trim();
   const subject = form.subject.value.trim();

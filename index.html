@@ -19,12 +19,12 @@
       <form id="task-form">
         <label>
           Task Name
-          <input type="text" id="task-name" placeholder="Example: Study Linear Algebra" required />
+          <input type="text" id="task-name" name="title" placeholder="Example: Study Linear Algebra" required />
         </label>
 
         <label>
           Subject
-          <select id="task-subject" required>
+          <select id="task-subject" name="subject" required>
             <option value="">Select a subject</option>
             <option value="Linear Algebra">Linear Algebra</option>
             <option value="Operating Systems">Operating Systems</option>
@@ -37,7 +37,7 @@
 
         <label>
           Priority
-          <select id="task-priority" required>
+          <select id="task-priority" name="priority" required>
             <option value="Low">Low</option>
             <option value="Medium" selected>Medium</option>
             <option value="High">High</option>
@@ -46,7 +46,7 @@
 
         <label>
           Deadline
-          <input type="date" id="task-deadline" required />
+          <input type="date" id="task-deadline" name="deadline" required />
         </label>
 
         <button type="submit">Add Task</button>
