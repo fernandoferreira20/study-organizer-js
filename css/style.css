@@ -191,6 +191,39 @@ button:hover {
 }
 
 /* ==========================
+   SEARCH & SORT
+========================== */
+
+.search-sort-section {
+  grid-column: 1 / -1;
+}
+
+.search-sort-controls {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+}
+
+.search-control,
+.sort-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================
    FILTERS
 ========================== */
 
@@ -246,6 +279,10 @@ button:hover {
   }
 
   .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-sort-controls {
     grid-template-columns: 1fr;
   }
 
