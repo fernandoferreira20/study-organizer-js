@@ -43,8 +43,10 @@ function createTextElement(tagName, text) {
  *
  * Rendering means turning data into visible UI. In this case, we are turning a
  * list of tasks into a message that tells the user there is nothing to display.
+ *
+ * @param {string} message The message to show when there are no visible tasks.
  */
-export function showEmptyState() {
+export function showEmptyState(message = "No tasks yet. Add your first study task.") {
   const container = getTasksContainer();
 
   if (!container) {
@@ -52,7 +54,10 @@ export function showEmptyState() {
   }
 
   clearTaskContainer();
-  container.appendChild(createTextElement("p", "No tasks yet. Add your first study task."));
+
+  const emptyState = createTextElement("p", message);
+  emptyState.className = "empty-message";
+  container.appendChild(emptyState);
 }
 
 /**
@@ -109,11 +114,38 @@ export function createTaskCard(task) {
   card.className = "task-card";
   card.dataset.taskId = task.id;
 
+  if (task.completed) {
+    card.classList.add("task-card-completed");
+  }
+
+  const header = document.createElement("div");
+  header.className = "task-card-header";
+
   const title = createTextElement("h3", task.title);
+  title.className = "task-title";
+
+  const priorityBadge = document.createElement("span");
+  priorityBadge.className = `priority-badge priority-${String(task.priority || "medium").toLowerCase()}`;
+  priorityBadge.textContent = task.priority || "Medium";
+
+  header.appendChild(title);
+  header.appendChild(priorityBadge);
+
+  const meta = document.createElement("div");
+  meta.className = "task-meta";
+
   const subject = createTextElement("p", `Subject: ${task.subject}`);
-  const priority = createTextElement("p", `Priority: ${task.priority}`);
+  subject.className = "task-meta-item";
+
   const deadline = createTextElement("p", `Deadline: ${task.deadline}`);
-  const completed = createTextElement("p", `Completed: ${task.completed ? "Yes" : "No"}`);
+  deadline.className = "task-meta-item task-deadline";
+
+  const completed = createTextElement("p", task.completed ? "Completed" : "Pending");
+  completed.className = "task-meta-item task-status";
+
+  meta.appendChild(subject);
+  meta.appendChild(deadline);
+  meta.appendChild(completed);
 
   const actions = document.createElement("div");
   actions.className = "task-actions";
@@ -122,6 +154,7 @@ export function createTaskCard(task) {
   completeButton.type = "button";
   completeButton.textContent = task.completed ? "Mark Incomplete" : "Complete";
   completeButton.dataset.action = "toggle-complete";
+  completeButton.className = task.completed ? "secondary-action" : "primary-action";
 
   const editButton = document.createElement("button");
   editButton.type = "button";
@@ -133,16 +166,14 @@ export function createTaskCard(task) {
   deleteButton.type = "button";
   deleteButton.textContent = "Delete";
   deleteButton.dataset.action = "delete";
+  deleteButton.className = "danger-action";
 
   actions.appendChild(completeButton);
   actions.appendChild(editButton);
   actions.appendChild(deleteButton);
 
-  card.appendChild(title);
-  card.appendChild(subject);
-  card.appendChild(priority);
-  card.appendChild(deadline);
-  card.appendChild(completed);
+  card.appendChild(header);
+  card.appendChild(meta);
   card.appendChild(actions);
 
   return card;
@@ -167,7 +198,8 @@ export function renderTasks(tasks) {
   clearTaskContainer();
 
   if (!tasks || tasks.length === 0) {
-    showEmptyState();
+    const message = container.dataset.emptyMessage || "No tasks yet. Add your first study task.";
+    showEmptyState(message);
     return;
   }
 

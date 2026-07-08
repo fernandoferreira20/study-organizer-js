@@ -286,30 +286,129 @@ button:hover {
 }
 
 .task-card {
-  background: #fffaf5;
+  background: linear-gradient(135deg, #fffaf5 0%, #fdf2e7 100%);
   border: 1px solid #ead6c0;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(76, 50, 34, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(76, 50, 34, 0.12);
+}
+
+.task-card-completed {
+  opacity: 0.72;
+  background: linear-gradient(135deg, #f6f1e8 0%, #efe4d2 100%);
+}
+
+.task-card-completed .task-title {
+  text-decoration: line-through;
+  color: #8b6f58;
+}
+
+.task-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.task-title {
+  font-size: 1.05rem;
+  color: #3f2619;
+  margin: 0;
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.priority-low {
+  background: #e2f2e5;
+  color: #2d6a3e;
+}
+
+.priority-medium {
+  background: #fef0c7;
+  color: #9b6408;
+}
+
+.priority-high {
+  background: #fde2e2;
+  color: #b23b3b;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.task-meta-item {
+  margin: 0;
+  color: #6d4d3a;
+  font-size: 0.95rem;
+}
+
+.task-deadline {
+  font-weight: 600;
+  color: #7b4b2a;
+}
+
+.task-status {
+  font-weight: 600;
 }
 
 .task-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .task-actions button {
   padding: 10px 14px;
+  border-radius: 10px;
+}
+
+.primary-action {
+  background: #5a3825;
+}
+
+.secondary-action {
+  background: #7b4b2a;
+}
+
+.danger-action {
+  background: #aa4b4b;
+}
+
+.danger-action:hover {
+  background: #8f3a3a;
 }
 
 .empty-message {
   color: #7a5a45;
   text-align: center;
-  padding: 20px;
+  padding: 28px 20px;
+  border: 1px dashed #d8bea5;
+  border-radius: 16px;
+  background: rgba(255, 250, 245, 0.8);
 }
 
 /* ==========================
@@ -327,6 +426,19 @@ button:hover {
 
   .search-sort-controls {
     grid-template-columns: 1fr;
+  }
+
+  .task-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-actions {
+    flex-direction: column;
+  }
+
+  .task-actions button {
+    width: 100%;
   }
 
   .app-header h1 {
